@@ -2,21 +2,49 @@
 
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      var socket = io();
+
+      $('#submitbtn').click(function() {
+        console.log("welcome cameron");
+        socket.emit('sendingformdata', {
+          // data: $("form#form_id".serialize()),
+          name: $('#name').val(),
+          location: $('#location').val(),
+          language: $('#language').val(),
+          comment: $('#comment').val(),
+        })
+      });
+      socket.on('returningformdata', function(data) {
+        console.log("hahahhahaa");
+        console.log(data.formdata);
+        $('.magicbox').append("You emitted the following information to the server: Name = " + data.formdata.name + ", Location = " + data.formdata.location + ", Language = " + data.formdata.language + ", Comment = " + data.formdata.comment);
+      });
+      socket.on('randomnum', function(data) {
+        $('.magicbox').append(" Your lucky number emitted by the server is " + data.randomnumber);
+      });
+    })
+  </script>
 </head>
 
 <body>
   <div class="container">
-    <form action='/result' method='post'>
+    <p class="magicbox" name="magicbox" id="magicbox"></p>
+    <form method='post'>
       <label for="name">Name: </label>
-      <input class="form-control" type='text' name='name'>
+      <input class="form-control" type='text' name='name' id='name'>
       <label for="location">Dojo Location: </label>
-      <input class="form-control" type='text' name='location'>
+      <input class="form-control" type='text' name='location' id='location'>
       <label for="language">Favorite Language: </label>
-      <input class="form-control" type='text' name='language'>
+      <input class="form-control" type='text' name='language' id='language'>
       <label for="comment">Comment: </label>
-      <input class="form-control" type='text' name='comment'>
-      <input class="btn btn-outline-primary" type='submit' value='submit'>
+      <input class="form-control" type='text' name='comment' id='comment'>
     </form>
+    <input name="submitbtn" id="submitbtn" class="btn btn-outline-primary" type='submit' value='Submit'>
   </div>
 </body>
 
